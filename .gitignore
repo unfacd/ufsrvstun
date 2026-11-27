@@ -1,0 +1,9 @@
+/build/
+/cmake-build-*/
+/.idea/
+/CMakeUserPresets.json
+
+/dev/scripts/ufsrv_config_generator/*
+!/dev/scripts/ufsrv_config_generator/ufsrvstun/
+/dev/scripts/ufsrv_config_generator/ufsrvstun/*
+!/dev/scripts/ufsrv_config_generator/ufsrvstun/ufsrv_config_generator_fields.c.input

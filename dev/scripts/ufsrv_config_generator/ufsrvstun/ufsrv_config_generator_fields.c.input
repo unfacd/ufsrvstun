@@ -1,0 +1,479 @@
+/**
+ * @file ufsrv_config_generator_fields.c.input
+ * @brief Cold catalogue — ufsrvstun leaf-server adjunct config fields.
+ *
+ * Mirror of etc/adjunct_schema_ufsrvstun.lua (ufsrvstun scope).
+ * Field names, defaults, bounds and C types must stay aligned with that schema
+ * and with the CONF_FILE_LITERAL_* macros in
+ * ufsrv_config_literals_defs.h.
+ *
+ * Copyright (C) 2015-2026 unfacd works
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ */
+
+//These help the generator compile
+#include <limits.h>
+#include <netinet/in.h>
+#include <lua.h>
+
+#include <ufsrvcorelib/ufsrv_core/ufsrv_config/ufsrv_config_field_descriptor.h>
+#include <ufsrvcorelib/ufsrv_core/ufsrv_config/ufsrv_config_store_operating_state_enum.h>
+#include <ufsrvcorelib/ufsrv_core/ufsrv_config/ufsrv_config_types.h>
+
+static const UfsrvConfigFieldDescriptorForGenerator core_fields[] = {
+
+    {
+        .name            = "stun_is_enabled",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_IS_ENABLED,
+        .value_type      = UFSRV_CONFIG_VALUE_BOOL,
+        .c_lang_type     = "bool",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default    = { .config = { .stored_value = { .int_val = false } } },
+        .lifecycle = { .on_inflated = "GenericBoolInflator", .on_value_available = "GenericBoolSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = NULL },
+        .validation      = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_shard_count",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_SHARD_COUNT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 2 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_shard_hash_table_startup_size",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_SHARD_HASH_TABLE_STARTUP_SIZE,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 64 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {1, INT_MAX} } },
+    },
+
+    {
+        .name            = "stun_workers_per_shard",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_WORKERS_PER_SHARD,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 2 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_fingerprint_policy",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_FINGERPRINT_POLICY,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "optional" }, .type_allocation_sz = 16 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_max_request_bytes",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_MAX_REQUEST_BYTES,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 1200 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_binding_rate_limit_per_source",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_BINDING_RATE_LIMIT_PER_SOURCE,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 50 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_binding_rate_limit_burst",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_BINDING_RATE_LIMIT_BURST,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 100 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_is_enabled",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_IS_ENABLED,
+        .value_type      = UFSRV_CONFIG_VALUE_BOOL,
+        .c_lang_type     = "bool",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = false } } },
+        .lifecycle = { .on_inflated = "GenericBoolInflator", .on_value_available = "GenericBoolSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_bind_address",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_BIND_ADDRESS,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 257 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_port",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_PORT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "int",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 5349 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_certificate_chain_file",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_CERTIFICATE_CHAIN_FILE,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 4096 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_private_key_file",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_PRIVATE_KEY_FILE,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 4096 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_flows_per_shard",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_FLOWS_PER_SHARD,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 256 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_flow_idle_timeout_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_FLOW_IDLE_TIMEOUT_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 60 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_sends_per_shard",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_SENDS_PER_SHARD,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 256 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_is_enabled",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_IS_ENABLED,
+        .value_type      = UFSRV_CONFIG_VALUE_BOOL,
+        .c_lang_type     = "bool",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = false } } },
+        .lifecycle = { .on_inflated = "GenericBoolInflator", .on_value_available = "GenericBoolSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_allocation_lifetime_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_ALLOCATION_LIFETIME_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 600 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_max_allocation_lifetime_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_MAX_ALLOCATION_LIFETIME_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 3600 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_max_allocations_per_principal",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_MAX_ALLOCATIONS_PER_PRINCIPAL,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 8 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_flows_per_shard",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_FLOWS_PER_SHARD,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 256 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_flow_idle_timeout_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_FLOW_IDLE_TIMEOUT_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 60 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_sends_per_shard",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_SENDS_PER_SHARD,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "size_t",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 256 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_realm",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_REALM,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 764 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_nonce_lifetime_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_NONCE_LIFETIME_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 600 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_credential_file",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_CREDENTIAL_FILE,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 4096 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_nonce_secret",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_NONCE_SECRET,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 256 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_credential_provider",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_CREDENTIAL_PROVIDER,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "standalone" }, .type_allocation_sz = 32 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_realm_credential_secret",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_REALM_CREDENTIAL_SECRET,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 256 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_max_credential_lifetime_seconds",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_MAX_CREDENTIAL_LIFETIME_SECONDS,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 3600 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_relay_bind_address",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_RELAY_BIND_ADDRESS,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 128 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_relay_advertised_address",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_RELAY_ADVERTISED_ADDRESS,
+        .value_type      = UFSRV_CONFIG_VALUE_STR,
+        .c_lang_type     = "char *",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .str_val = "" }, .type_allocation_sz = 128 } },
+        .lifecycle = { .on_inflated = "GenericStrInflator", .on_value_available = "GenericStrSetter", .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStrTeardown" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_dtls_relay_min_port",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_RELAY_MIN_PORT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 0 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {0, 65535} } },
+    },
+
+    {
+        .name            = "stun_dtls_relay_max_port",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_DTLS_RELAY_MAX_PORT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 0 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {0, 65535} } },
+    },
+
+    {
+        .name            = "stun_turn_relay_min_port",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_RELAY_MIN_PORT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 0 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {0, 65535} } },
+    },
+
+    {
+        .name            = "stun_turn_relay_max_port",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_RELAY_MAX_PORT,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 0 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {0, 65535} } },
+    },
+
+    {
+        .name            = "stun_turn_peer_allow_cidrs",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_PEER_ALLOW_CIDRS,
+        .value_type      = UFSRV_CONFIG_VALUE_STRUCT,
+        .c_lang_type     = "CollectionDescriptor",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .type_allocation_sz = sizeof(CollectionDescriptor) } },
+        .lifecycle = { .on_inflated = "GenericStructInflator", .on_value_available = NULL, .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStructTeardown" },
+        .is_keep_custom_setter = true,
+        .is_as_ptr_getter = true,
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_peer_deny_cidrs",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_PEER_DENY_CIDRS,
+        .value_type      = UFSRV_CONFIG_VALUE_STRUCT,
+        .c_lang_type     = "CollectionDescriptor",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .type_allocation_sz = sizeof(CollectionDescriptor) } },
+        .lifecycle = { .on_inflated = "GenericStructInflator", .on_value_available = NULL, .on_value_reloaded = "GenericReloadedStub", .on_teardown = "GenericStructTeardown" },
+        .is_keep_custom_setter = true,
+        .is_as_ptr_getter = true,
+        .validation = { .type = UFSRV_CONFIG_CHECK_NONE },
+    },
+
+    {
+        .name            = "stun_turn_max_permissions_per_allocation",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_MAX_PERMISSIONS_PER_ALLOCATION,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 1024 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_UINT32_RANGE, .check = { .uint32_range = {1, UINT32_MAX} } },
+    },
+
+    {
+        .name            = "stun_turn_max_channels_per_allocation",
+        .config_file_key = CONF_FILE_LITERAL_UFSRVSTUN_TURN_MAX_CHANNELS_PER_ALLOCATION,
+        .value_type      = UFSRV_CONFIG_VALUE_INT,
+        .c_lang_type     = "unsigned",
+        .domain          = UFSRV_CONFIG_DOMAIN_CONFIG,
+        .config_field_default = { .config = { .stored_value = { .int_val = 256 } } },
+        .lifecycle = { .on_inflated = "GenericIntInflator", .on_value_available = "GenericIntSetter", .on_value_reloaded = "GenericReloadedStub" },
+        .validation = { .type = UFSRV_CONFIG_CHECK_RANGE, .check = { .range = {1, 4096} } },
+    },
+
+    // Sentinel — do not remove
+    { .name = NULL }
+};
+
+static const size_t core_field_count =
+    (sizeof(core_fields) / sizeof(core_fields[0])) - 1;

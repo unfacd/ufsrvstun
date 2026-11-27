@@ -1,0 +1,45 @@
+/**
+ * Copyright (C) 2015-2026 unfacd works
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file config_ufsrvstun.h.in
+ * @brief CMake configure_file() template -- generates config_ufsrvstun.h at configure time.
+ * Configuration defaults for items the user did not pass via -D live in
+ * cmake-modules/config_defaults_definitions.cmake
+ */
+
+#ifndef CONFIG_UFSRVSTUN_H
+#define CONFIG_UFSRVSTUN_H
+
+#define _REENTRANT
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
+
+#define UFSRVSTUN_DEBUG_BUILD    @UFSRVSTUN_DEBUG_BUILD@   /* 1 for Debug builds, or when a verbosity level is on */
+#define UFSRVSTUN_DEBUG_BUILD_L2 @UFSRVSTUN_DEBUG_L2@      /* level-2 verbose tracing */
+#define UFSRVSTUN_DEBUG_BUILD_L3 @UFSRVSTUN_DEBUG_L3@      /* level-3 per-object tracing */
+
+// standard HAVE_* probes (preferred over old __VALGRIND_DRD)
+#cmakedefine HAVE_VALGRIND
+#cmakedefine HAVE_VALGRIND_DRD
+#cmakedefine HAVE_VALGRIND_MEMCHECK
+
+#define CONFIG_UFSRVSTUN_CONFIGFILE_ADJUNCT_SCHEMA "@CONFIG_UFSRVSTUN_CONFIGFILE_ADJUNCT_SCHEMA@"
+#define CONFIG_CONFIGFILE_DEFAULT_PID_DIR "@CONFIG_CONFIGFILE_DEFAULT_PID_DIR@"
+
+#endif /* CONFIG_UFSRVSTUN_H */
